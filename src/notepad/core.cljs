@@ -8,7 +8,16 @@
                                                 "background-color:#EEE"})
                                       title)
         content-element (dom/createDom "div" nil content)
-        new-note (dom/createDom "div" nil header-element content-element)]
+        editor-element (dom/createDom "textarea")
+        save-button (dom/createDom "input" (.strobj {"type" "button"
+                                                     "value" "Save"}))
+        editor-container (dom/createDom "div"
+                                        (.strobj {"style" "display:none"})
+                                        editor-element
+                                        save-button)
+        content-container (dom/createDom "div" nil
+                                         content-element editor-container)
+        new-note (dom/createDom "div" nil header-element content-container)]
     (dom/appendChild parent new-note)
     (goog.ui.Zippy. header-element content-element)))
 
