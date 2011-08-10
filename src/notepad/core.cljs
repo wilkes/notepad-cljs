@@ -4,6 +4,12 @@
             [goog.events :as events]
             [goog.events.EventType :as event-type]))
 
+(defn show [el]
+  (set! (.. el style display) "inline"))
+
+(defn hide [el]
+  (set! (.. el style display) "none"))
+
 (defn make-note-dom [parent {:keys [title content]}]
   (let [content (atom content)
         header-element (dom/createDom "div"
@@ -24,15 +30,15 @@
     (dom/appendChild parent new-note)
     (events/listen content-element event-type/CLICK
                    (fn [e]
-                     (set! (.. editor-element value) @content)
-                     (set! (.. content-element style display) "none")
-                     (set! (.. editor-container style display) "inline")))
+                     (dom/setTextContent editor-element @content)
+                     (hide content-element)
+                     (show editor-container)))
     (events/listen save-button event-type/CLICK
                    (fn [e]
                      (reset! content (.value editor-element))
-                     (set! (.. content-element innerHTML) @content)
-                     (set! (.. content-element style display) "inline")
-                     (set! (.. editor-container style display) "none")))
+                     (dom/setTextContent content-element @content)
+                     (show content-element)
+                     (hide editor-container)))
     (goog.ui.Zippy. header-element content-element)))
 
 (defn make-notes [data note-container]
